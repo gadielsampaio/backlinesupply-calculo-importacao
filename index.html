@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://t4.ftcdn.net/jpg/04/11/39/77/360_F_411397771_TYwKZCENTf7RJUuxll4tqjrxbkvkAC9U.jpg" type="image/x-icon">
+    <link rel="shortcut icon"
+        href="https://t4.ftcdn.net/jpg/04/11/39/77/360_F_411397771_TYwKZCENTf7RJUuxll4tqjrxbkvkAC9U.jpg"
+        type="image/x-icon">
     <title>Calculadora de Custo de Importação</title>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -29,18 +31,19 @@
         input[type="number"] {
             transition: all 0.3s ease;
         }
+
+        /* Remove as setinhas dos inputs numéricos para ficar mais limpo */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans p-4 md:p-8 min-h-screen selection:bg-indigo-200">
 
     <div class="max-w-7xl mx-auto">
-        <!-- <header class="mb-10 text-center md:text-left">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Calculadora de Importação</h1>
-            <p class="text-slate-500 mt-2 text-lg">Compare os cenários e defina a melhor estratégia para o seu negócio.
-            </p>
-        </header> -->
-
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
             <div
@@ -128,6 +131,27 @@
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
         };
 
+        // Função ativada quando o usuário edita o preço final diretamente no card
+        window.updateCustomProfit = (id, totalCost) => {
+            const customPriceInput = document.getElementById(`venda-${id}`);
+            const newPrice = parseFloat(customPriceInput.value) || 0;
+
+            const newProfit = newPrice - totalCost;
+            const newMargin = totalCost > 0 ? (newProfit / totalCost) * 100 : 0;
+
+            // Atualiza os valores na tela
+            document.getElementById(`lucro-val-${id}`).innerText = formatBRL(newProfit);
+            document.getElementById(`margem-val-${id}`).innerText = `(${newMargin.toFixed(1)}%)`;
+
+            // Muda a cor do container de lucro caso o preço dê prejuízo (negativo)
+            const profitContainer = document.getElementById(`lucro-container-${id}`);
+            if (newProfit < 0) {
+                profitContainer.className = "flex justify-between items-center text-red-600 font-medium bg-red-50/80 -mx-2 px-2 py-1.5 rounded transition-colors";
+            } else {
+                profitContainer.className = "flex justify-between items-center text-indigo-700 font-medium bg-indigo-50/80 -mx-2 px-2 py-1.5 rounded transition-colors";
+            }
+        };
+
         // Função principal de cálculo
         const calculateScenarios = () => {
             // Pegar valores dos inputs
@@ -192,10 +216,10 @@
                 return s;
             });
 
-            renderCards(scenarios);
+            renderCards(scenarios, margemLucro);
         };
 
-        const renderCards = (scenarios) => {
+        const renderCards = (scenarios, margemLucro) => {
             const container = document.getElementById('scenariosContainer');
             container.innerHTML = '';
 
@@ -228,16 +252,30 @@
                                     <span>Custo Total:</span> 
                                     <span>${formatBRL(s.totalCost)}</span>
                                 </li>
-                                <li class="flex justify-between items-center text-indigo-600 font-medium bg-indigo-50/50 -mx-2 px-2 py-1 rounded">
-                                    <span>Lucro Projetado:</span> 
-                                    <span>${formatBRL(s.profit)}</span>
+                                
+                                <li id="lucro-container-${s.id}" class="flex justify-between items-center text-indigo-700 font-medium bg-indigo-50/80 -mx-2 px-2 py-1.5 rounded transition-colors">
+                                    <span class="flex items-center gap-1">
+                                        Lucro Projetado <!-- <span id="margem-val-${s.id}" class="text-xs font-bold opacity-70">(${margemLucro.toFixed(1)}%)</span>-->:
+                                    </span> 
+                                    <span id="lucro-val-${s.id}">${formatBRL(s.profit)}</span>
                                 </li>
                             </ul>
                         </div>
                         
-                        <div class="pt-4 border-t border-slate-200/80 flex items-end justify-between">
-                            <span class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Preço Final</span>
-                            <span class="text-2xl font-bold text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">${formatBRL(s.finalPrice)}</span>
+                        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Preço Final</span>
+                                <!-- <span class="text-[10px] text-indigo-400 font-medium">Você pode editar ✏️</span> -->
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="text-slate-400 font-bold text-lg">R$</span>
+                                <input type="number" 
+                                       id="venda-${s.id}" 
+                                       value="${s.finalPrice.toFixed(2)}" 
+                                       step="0.01"
+                                       oninput="updateCustomProfit(${s.id}, ${s.totalCost})"
+                                       class="w-28 bg-transparent text-right text-2xl font-bold text-slate-900 tracking-tight border-b-2 border-slate-200 hover:border-indigo-300 focus:border-indigo-600 outline-none transition-colors group-hover:text-indigo-600">
+                            </div>
                         </div>
                         
                     </div>
