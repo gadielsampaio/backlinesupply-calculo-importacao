@@ -41,7 +41,7 @@
                 <form id="calcForm" class="space-y-5 text-sm">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Valor do Produto (USD)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Produto (USD)</label>
                             <input type="text" inputmode="numeric" id="valUsd" value="0,00"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
@@ -54,12 +54,12 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Dólar Turismo (R$)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Dól. Turismo (R$)</label>
                             <input type="text" inputmode="numeric" id="dolTurismo" value="5,30"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Dólar Banco (R$)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Dól. Banco (R$)</label>
                             <input type="text" inputmode="numeric" id="dolBanco" value="5,26"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
@@ -67,12 +67,12 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Frete Aéreo (USD/kg)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Aéreo (USD/kg)</label>
                             <input type="text" inputmode="numeric" id="freteAereo" value="21,00"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Frete Marítimo (USD/kg)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Marítimo (USD/kg)</label>
                             <input type="text" inputmode="numeric" id="freteMar" value="11,00"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
@@ -80,14 +80,27 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Taxa Assistida (%)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Assistida (%)</label>
                             <input type="text" inputmode="numeric" id="taxaAssistida" value="10,00"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
                         </div>
                         <div>
-                            <label class="block text-slate-500 font-medium mb-1.5">Margem de Lucro (%)</label>
+                            <label class="block text-slate-500 font-medium mb-1.5">Lucro Base (%)</label>
                             <input type="text" inputmode="numeric" id="margemLucro" value="30,00"
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-slate-700 font-medium text-right transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                        <div>
+                            <label class="block text-slate-500 font-medium mb-1.5" title="Aplicado se o produto custar até $999,99">Taxa Fixa < $1k (R$)</label>
+                            <input type="text" inputmode="numeric" id="taxaFixaBrl" value="50,00"
+                                class="w-full bg-amber-50/50 border border-amber-200/60 rounded-xl p-3 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none text-amber-900 font-medium text-right transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-slate-500 font-medium mb-1.5" title="Aplicado se o produto custar $1000 ou mais">Taxa Extra ≥ $1k (%)</label>
+                            <input type="text" inputmode="numeric" id="taxaExtraPerc" value="10,00"
+                                class="w-full bg-amber-50/50 border border-amber-200/60 rounded-xl p-3 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none text-amber-900 font-medium text-right transition-colors">
                         </div>
                     </div>
                 </form>
@@ -115,7 +128,6 @@
             return parseFloat(strValue) || 0;
         };
 
-        // Força o cursor sempre para a última posição
         window.setCursorToEnd = (input) => {
             setTimeout(() => {
                 if (typeof input.selectionStart == "number") {
@@ -124,7 +136,6 @@
             }, 0);
         };
 
-        // Impede que o usuário use as setinhas do teclado para ir pro meio do texto
         window.preventArrowKeys = (event) => {
             if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
                 event.preventDefault();
@@ -140,7 +151,6 @@
             const floatValue = parseInt(valueStr, 10) / 100;
             input.value = formatNumber(floatValue);
 
-            // Mantém o cursor no final após a digitação
             setCursorToEnd(input);
         };
 
@@ -158,9 +168,9 @@
 
             const profitContainer = document.getElementById(`lucro-container-${id}`);
             if (newProfit < 0) {
-                profitContainer.className = "flex justify-between items-center text-red-600 font-medium bg-red-50/80 -mx-2 px-2 py-1.5 rounded transition-colors";
+                profitContainer.className = "flex justify-between items-center text-red-600 font-medium bg-red-50/80 -mx-2 px-2 py-1.5 rounded transition-colors mt-2";
             } else {
-                profitContainer.className = "flex justify-between items-center text-indigo-700 font-medium bg-indigo-50/80 -mx-2 px-2 py-1.5 rounded transition-colors";
+                profitContainer.className = "flex justify-between items-center text-indigo-700 font-medium bg-indigo-50/80 -mx-2 px-2 py-1.5 rounded transition-colors mt-2";
             }
         };
 
@@ -173,26 +183,38 @@
             const freteMarUsd = parseMaskedValue('freteMar');
             const taxaAssistida = parseMaskedValue('taxaAssistida');
             const margemLucro = parseMaskedValue('margemLucro');
+            
+            // Novos inputs
+            const taxaFixaBrl = parseMaskedValue('taxaFixaBrl');
+            const taxaExtraPerc = parseMaskedValue('taxaExtraPerc');
 
             let scenarios = [];
 
-            // Regras baseadas na especificação
+            // Cálculos Base
             const freteAereoBrl = (peso * freteAereoUsd) * dolTurismo;
             const freteMarBrl = (peso * freteMarUsd) * dolTurismo;
             const prodCartao = valUsd * dolBanco;
             const prodAssistida = valUsd * dolTurismo;
 
-            // NOVA REGRA: Taxa de $50 fixa + 10% se o produto > $1000
-            const taxaFixaUsd = 50;
-            const taxaExtraValorUsd = valUsd > 1000 ? valUsd * 0.10 : 0;
-            const totalTaxasExtrasUsd = taxaFixaUsd + taxaExtraValorUsd;
-            // Convertido usando Dólar Turismo (padrão logístico)
-            const taxasExtrasBrl = totalTaxasExtrasUsd * dolTurismo;
+            // NOVA REGRA CONDICIONAL
+            let taxasExtrasBrl = 0;
+            let labelTaxa = "";
 
-            scenarios.push({ id: 1, name: "Cartão + Aéreo ✈️", prodCost: prodCartao, assistFee: 0, freight: freteAereoBrl, extraFees: taxasExtrasBrl });
-            scenarios.push({ id: 2, name: "Cartão + Marítimo 🚢", prodCost: prodCartao, assistFee: 0, freight: freteMarBrl, extraFees: taxasExtrasBrl });
-            scenarios.push({ id: 3, name: "Assistida + Aéreo ✈️", prodCost: prodAssistida, assistFee: prodAssistida * (taxaAssistida / 100), freight: freteAereoBrl, extraFees: taxasExtrasBrl });
-            scenarios.push({ id: 4, name: "Assistida + Marítimo 🚢", prodCost: prodAssistida, assistFee: prodAssistida * (taxaAssistida / 100), freight: freteMarBrl, extraFees: taxasExtrasBrl });
+            if (valUsd >= 1000) {
+                // Se >= $1000: Calcula % sobre o valor em USD e converte pra Real no Turismo
+                const taxaExtraUsd = valUsd * (taxaExtraPerc / 100);
+                taxasExtrasBrl = taxaExtraUsd * dolTurismo;
+                labelTaxa = `Taxa Extra (${taxaExtraPerc}%)`;
+            } else if (valUsd > 0) {
+                // Se < $1000: Usa a taxa fixa em Reais (só aplica se tiver algum valor no produto)
+                taxasExtrasBrl = taxaFixaBrl;
+                labelTaxa = "Taxa Logística Fixa";
+            }
+
+            scenarios.push({ id: 1, name: "Cartão + Aéreo ✈️", prodCost: prodCartao, assistFee: 0, freight: freteAereoBrl, extraFees: taxasExtrasBrl, labelTaxa: labelTaxa });
+            scenarios.push({ id: 2, name: "Cartão + Marítimo 🚢", prodCost: prodCartao, assistFee: 0, freight: freteMarBrl, extraFees: taxasExtrasBrl, labelTaxa: labelTaxa });
+            scenarios.push({ id: 3, name: "Assistida + Aéreo ✈️", prodCost: prodAssistida, assistFee: prodAssistida * (taxaAssistida / 100), freight: freteAereoBrl, extraFees: taxasExtrasBrl, labelTaxa: labelTaxa });
+            scenarios.push({ id: 4, name: "Assistida + Marítimo 🚢", prodCost: prodAssistida, assistFee: prodAssistida * (taxaAssistida / 100), freight: freteMarBrl, extraFees: taxasExtrasBrl, labelTaxa: labelTaxa });
 
             scenarios = scenarios.map(s => {
                 s.totalCost = s.prodCost + s.assistFee + s.freight + s.extraFees;
@@ -210,6 +232,14 @@
 
             scenarios.forEach((s, index) => {
                 const formattedFinalPrice = formatNumber(s.finalPrice);
+
+                // Só mostra a linha de taxa extra se ela for maior que zero
+                const taxaHtml = s.extraFees > 0 ? `
+                    <li class="flex justify-between items-center text-amber-700/90 font-medium bg-amber-50/50 -mx-2 px-2 py-1 rounded mt-1">
+                        <span>${s.labelTaxa}:</span> 
+                        <span>${formatBRL(s.extraFees)}</span>
+                    </li>
+                ` : '';
 
                 const html = `
                     <div class="bg-slate-50/50 rounded-2xl p-5 md:p-6 border border-slate-200 hover:border-indigo-200 hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
@@ -234,11 +264,8 @@
                                     <span class="text-slate-500">Frete:</span> 
                                     <span class="font-medium text-slate-700">${formatBRL(s.freight)}</span>
                                 </li>
-                                <li class="flex justify-between items-center text-amber-700/80">
-                                    <span class="text-slate-500">Taxas Extras (Logística):</span> 
-                                    <span class="font-medium">${formatBRL(s.extraFees)}</span>
-                                </li>
-                                <li class="flex justify-between items-center font-medium text-slate-800 mt-4 border-t border-slate-200/60 pt-3">
+                                ${taxaHtml}
+                                <li class="flex justify-between items-center font-bold text-slate-800 mt-4 border-t border-slate-200/80 pt-3">
                                     <span>Custo Total:</span> 
                                     <span>${formatBRL(s.totalCost)}</span>
                                 </li>
@@ -255,7 +282,6 @@
                         <div class="pt-4 border-t border-slate-200 flex items-center justify-between mt-4">
                             <div class="flex flex-col">
                                 <span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Preço Final</span>
-                                <span class="text-[10px] text-indigo-400 font-medium">Você pode editar ✏️</span>
                             </div>
                             <div class="flex items-center gap-1">
                                 <span class="text-slate-400 font-bold text-lg">R$</span>
@@ -275,7 +301,6 @@
             });
         };
 
-        // Adiciona os eventos de máscara e cursor aos inputs da esquerda
         const inputs = document.querySelectorAll('#calcForm input');
         inputs.forEach(input => {
             input.addEventListener('input', (event) => {
